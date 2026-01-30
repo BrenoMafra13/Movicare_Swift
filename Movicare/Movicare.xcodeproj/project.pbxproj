@@ -7,32 +7,19 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		BC8910602F2CEE0000AD4014 /* Movicare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movicare.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC637BF02F2D0FE800553F22 /* Movicare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movicare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		BC8910722F2CEE0100AD4014 /* Exceptions for "Movicare" folder in "Movicare" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = BC89105F2F2CEE0000AD4014 /* Movicare */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		BC8910622F2CEE0000AD4014 /* Movicare */ = {
+		BC637BF22F2D0FE800553F22 /* Movicare */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				BC8910722F2CEE0100AD4014 /* Exceptions for "Movicare" folder in "Movicare" target */,
-			);
 			path = Movicare;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BC89105D2F2CEE0000AD4014 /* Frameworks */ = {
+		BC637BED2F2D0FE800553F22 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -42,18 +29,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BC8910572F2CEE0000AD4014 = {
+		BC637BE72F2D0FE800553F22 = {
 			isa = PBXGroup;
 			children = (
-				BC8910622F2CEE0000AD4014 /* Movicare */,
-				BC8910612F2CEE0000AD4014 /* Products */,
+				BC637BF22F2D0FE800553F22 /* Movicare */,
+				BC637BF12F2D0FE800553F22 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		BC8910612F2CEE0000AD4014 /* Products */ = {
+		BC637BF12F2D0FE800553F22 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BC8910602F2CEE0000AD4014 /* Movicare.app */,
+				BC637BF02F2D0FE800553F22 /* Movicare.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,64 +48,64 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BC89105F2F2CEE0000AD4014 /* Movicare */ = {
+		BC637BEF2F2D0FE800553F22 /* Movicare */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BC8910732F2CEE0100AD4014 /* Build configuration list for PBXNativeTarget "Movicare" */;
+			buildConfigurationList = BC637BFB2F2D0FEA00553F22 /* Build configuration list for PBXNativeTarget "Movicare" */;
 			buildPhases = (
-				BC89105C2F2CEE0000AD4014 /* Sources */,
-				BC89105D2F2CEE0000AD4014 /* Frameworks */,
-				BC89105E2F2CEE0000AD4014 /* Resources */,
+				BC637BEC2F2D0FE800553F22 /* Sources */,
+				BC637BED2F2D0FE800553F22 /* Frameworks */,
+				BC637BEE2F2D0FE800553F22 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				BC8910622F2CEE0000AD4014 /* Movicare */,
+				BC637BF22F2D0FE800553F22 /* Movicare */,
 			);
 			name = Movicare;
 			packageProductDependencies = (
 			);
 			productName = Movicare;
-			productReference = BC8910602F2CEE0000AD4014 /* Movicare.app */;
+			productReference = BC637BF02F2D0FE800553F22 /* Movicare.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		BC8910582F2CEE0000AD4014 /* Project object */ = {
+		BC637BE82F2D0FE800553F22 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
-					BC89105F2F2CEE0000AD4014 = {
+					BC637BEF2F2D0FE800553F22 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
-			buildConfigurationList = BC89105B2F2CEE0000AD4014 /* Build configuration list for PBXProject "Movicare" */;
+			buildConfigurationList = BC637BEB2F2D0FE800553F22 /* Build configuration list for PBXProject "Movicare" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = BC8910572F2CEE0000AD4014;
+			mainGroup = BC637BE72F2D0FE800553F22;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = BC8910612F2CEE0000AD4014 /* Products */;
+			productRefGroup = BC637BF12F2D0FE800553F22 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BC89105F2F2CEE0000AD4014 /* Movicare */,
+				BC637BEF2F2D0FE800553F22 /* Movicare */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		BC89105E2F2CEE0000AD4014 /* Resources */ = {
+		BC637BEE2F2D0FE800553F22 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -128,7 +115,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		BC89105C2F2CEE0000AD4014 /* Sources */ = {
+		BC637BEC2F2D0FE800553F22 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -138,69 +125,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		BC8910742F2CEE0100AD4014 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Movicare/Info.plist;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ca.georgebrown.Movicare;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		BC8910752F2CEE0100AD4014 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Movicare/Info.plist;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ca.georgebrown.Movicare;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		BC8910762F2CEE0100AD4014 /* Debug */ = {
+		BC637BF92F2D0FEA00553F22 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -263,7 +188,7 @@
 			};
 			name = Debug;
 		};
-		BC8910772F2CEE0100AD4014 /* Release */ = {
+		BC637BFA2F2D0FEA00553F22 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -319,28 +244,90 @@
 			};
 			name = Release;
 		};
+		BC637BFC2F2D0FEA00553F22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.georgebrown.Movicare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BC637BFD2F2D0FEA00553F22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.georgebrown.Movicare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BC89105B2F2CEE0000AD4014 /* Build configuration list for PBXProject "Movicare" */ = {
+		BC637BEB2F2D0FE800553F22 /* Build configuration list for PBXProject "Movicare" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BC8910762F2CEE0100AD4014 /* Debug */,
-				BC8910772F2CEE0100AD4014 /* Release */,
+				BC637BF92F2D0FEA00553F22 /* Debug */,
+				BC637BFA2F2D0FEA00553F22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BC8910732F2CEE0100AD4014 /* Build configuration list for PBXNativeTarget "Movicare" */ = {
+		BC637BFB2F2D0FEA00553F22 /* Build configuration list for PBXNativeTarget "Movicare" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BC8910742F2CEE0100AD4014 /* Debug */,
-				BC8910752F2CEE0100AD4014 /* Release */,
+				BC637BFC2F2D0FEA00553F22 /* Debug */,
+				BC637BFD2F2D0FEA00553F22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = BC8910582F2CEE0000AD4014 /* Project object */;
+	rootObject = BC637BE82F2D0FE800553F22 /* Project object */;
 }
