@@ -1,12 +1,14 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Binding var isLoggedIn: Bool
+    
     @State private var userRole: String = "senior"
     @State private var userName: String = "Jhon Doe"
     
     var body: some View {
         if userRole.lowercased() == "senior" {
-            SeniorDashboard(userName: userName, userRole: userRole)
+            SeniorDashboard(userName: userName, userRole: userRole, isLoggedIn: $isLoggedIn)
         } else {
             FamilyCaregiverDashboard()
         }
@@ -16,14 +18,19 @@ struct HomeView: View {
 struct SeniorDashboard: View {
     let userName: String
     let userRole: String
+    @Binding var isLoggedIn: Bool
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack(spacing: 12) {
-                    Image("profile")
-                        .resizable()
-                        .frame(width: 75, height: 75)
+                    NavigationLink(destination: ProfileView(isLoggedIn: $isLoggedIn)) {
+                        Image("profile")
+                            .resizable()
+                            .frame(width: 75, height: 75)
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(PlainButtonStyle())
                     
                     VStack(alignment: .leading) {
                         Text(userName)
@@ -33,7 +40,7 @@ struct SeniorDashboard: View {
                             .foregroundColor(.gray)
                     }
                 }
-
+                
                 VStack {
                     VStack {
                         Text("I'm OK")
@@ -55,7 +62,7 @@ struct SeniorDashboard: View {
                     .background(Color(hex: 0x4CAF50))
                     .cornerRadius(20)
                 }
-
+                
                 VStack(alignment: .leading, spacing: 12) {
                     Text("MEDICATIONS DUE")
                         .font(.system(size: 20, weight: .bold))
@@ -70,22 +77,26 @@ struct SeniorDashboard: View {
                                     .foregroundColor(.gray)
                             }
                             Spacer()
-                            HStack {
-                                Text("TAKE")
-                                    .font(.system(size: 12))
-                                    .frame(height: 36)
-                                    .padding(.horizontal, 8)
-                                    .background(Color(hex: 0x1565C0))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(4)
+                            HStack(spacing: 8) {
+                                Button(action: {}) {
+                                    Text("TAKE")
+                                        .font(.system(size: 12))
+                                        .frame(height: 36)
+                                        .padding(.horizontal, 8)
+                                        .background(Color(hex: 0x1565C0))
+                                        .foregroundColor(.white)
+                                        .cornerRadius(4)
+                                }
                                 
-                                Text("SNOOZE")
-                                    .font(.system(size: 12))
-                                    .frame(height: 36)
-                                    .padding(.horizontal, 8)
-                                    .background(Color(hex: 0xD32F2F))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(4)
+                                Button(action: {}) {
+                                    Text("SNOOZE")
+                                        .font(.system(size: 12))
+                                        .frame(height: 36)
+                                        .padding(.horizontal, 8)
+                                        .background(Color(hex: 0xD32F2F))
+                                        .foregroundColor(.white)
+                                        .cornerRadius(4)
+                                }
                             }
                         }
                         Divider()
@@ -94,30 +105,7 @@ struct SeniorDashboard: View {
                 .padding(16)
                 .background(Color(hex: 0xF8F8F8))
                 .cornerRadius(14)
-
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Appointments")
-                        .font(.system(size: 20, weight: .bold))
-                    
-                    HStack {
-                        Image(systemName: "person.fill")
-                            .foregroundColor(Color(hex: 0xEF6C00))
-                            .font(.system(size: 26))
-                        
-                        VStack(alignment: .leading) {
-                            Text("Appointment Type")
-                                .font(.system(size: 16, weight: .semibold))
-                            HStack {
-                                Image(systemName: "calendar")
-                                    .foregroundColor(Color(hex: 0x1565C0))
-                                Text("Day at Time")
-                                    .font(.system(size: 14))
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                    }
-                }
-
+                
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Quick Help Request")
                         .font(.system(size: 20, weight: .bold))
@@ -134,7 +122,7 @@ struct SeniorDashboard: View {
                         .background(Color.black)
                         .foregroundColor(.white)
                         .cornerRadius(18)
-
+                        
                         VStack {
                             Image(systemName: "phone.fill")
                                 .font(.system(size: 50))
@@ -152,6 +140,7 @@ struct SeniorDashboard: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 20)
         }
+        .navigationBarHidden(true)
     }
 }
 
@@ -160,16 +149,7 @@ struct FamilyCaregiverDashboard: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("My Seniors")
                 .font(.system(size: 24, weight: .bold))
-            
             Divider()
-            
-            VStack(alignment: .leading, spacing: 24) {
-                Text("Medications Status")
-                    .font(.system(size: 18, weight: .bold))
-                
-                Text("Upcoming Appointments")
-                    .font(.system(size: 18, weight: .bold))
-            }
             Spacer()
         }
         .padding(16)
@@ -177,5 +157,5 @@ struct FamilyCaregiverDashboard: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(isLoggedIn: .constant(true))
 }

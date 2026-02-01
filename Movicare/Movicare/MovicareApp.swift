@@ -1,17 +1,18 @@
-//
-//  MovicareApp.swift
-//  Movicare
-//
-//  Created by Breno Lopes Mafra on 2026-01-30.
-//
-
 import SwiftUI
 
 @main
 struct MovicareApp: App {
+    @State private var isLoggedIn: Bool = false
+
     var body: some Scene {
         WindowGroup {
-            WelcomeView()
+            if isLoggedIn {
+                NavigationStack {
+                    HomeView(isLoggedIn: $isLoggedIn)
+                }
+            } else {
+                WelcomeView(isLoggedIn: $isLoggedIn)
+            }
         }
     }
 }

@@ -1,18 +1,34 @@
-//
-//  Utils.swift
-//  Movicare
-//
-//  Created by Breno Lopes Mafra on 2026-02-01.
-//
-
 import SwiftUI
 
-struct Utils: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+extension Color {
+    init(hex: UInt, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 8) & 0xff) / 255,
+            blue: Double(hex & 0xff) / 255,
+            opacity: alpha
+        )
     }
 }
 
-#Preview {
-    Utils()
+extension View {
+    func frame(fillMaxSize: CGFloat) -> some View {
+        self.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+    }
+}
+
+struct OutlinedTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+            )
+    }
+}
+
+extension TextFieldStyle where Self == OutlinedTextFieldStyle {
+    static var outlined: OutlinedTextFieldStyle { OutlinedTextFieldStyle() }
 }

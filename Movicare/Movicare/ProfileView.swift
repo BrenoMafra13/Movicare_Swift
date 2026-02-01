@@ -1,10 +1,13 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var userName: String = "User"
+    @Environment(\.dismiss) var dismiss
+    @Binding var isLoggedIn: Bool
+    
+    @State private var userName: String = "Jhon Doe"
     @State private var userRole: String = "SENIOR"
-    @State private var address: String = "Not set"
-
+    @State private var address: String = "123 Maple Avenue, Springfield, IL"
+    
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
@@ -12,7 +15,8 @@ struct ProfileView: View {
                     Image("profile")
                         .resizable()
                         .frame(width: 130, height: 130)
-
+                        .clipShape(Circle())
+                    
                     VStack(alignment: .leading, spacing: 0) {
                         Text(userName)
                             .font(.system(size: 30, weight: .bold))
@@ -21,63 +25,78 @@ struct ProfileView: View {
                             .foregroundColor(.gray)
                         
                         Spacer().frame(height: 10)
-                        
                         Text("My Address:")
                             .font(.system(size: 20, weight: .bold))
                         
                         Spacer().frame(height: 4)
-                        
                         Text(address)
                             .font(.system(size: 16))
+                            .foregroundColor(.black)
                             .lineLimit(nil)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-
+                
                 Spacer().frame(height: 28)
-
+                
                 VStack(spacing: 10) {
-                    ProfileMenuItem(title: "My Health")
-                    ProfileMenuItem(title: "Medications")
-                    ProfileMenuItem(title: "Family Members")
-                    ProfileMenuItem(title: "Appointments")
-                    ProfileMenuItem(title: "Account")
+                    NavigationLink(destination: MyHealthView()) {
+                        ProfileMenuItem(title: "My Health")
+                    }
+                    NavigationLink(destination: MedicationsView()) {
+                        ProfileMenuItem(title: "Medications")
+                    }
+                    NavigationLink(destination: FamilyMembersView()) {
+                        ProfileMenuItem(title: "Family Members")
+                    }
+                    NavigationLink(destination: AppointmentsView()) {
+                        ProfileMenuItem(title: "Appointments")
+                    }
+                    NavigationLink(destination: AccountView()) {
+                        ProfileMenuItem(title: "Account")
+                    }
                 }
             }
-
+            
             Spacer()
-
+            
             VStack(spacing: 10) {
-                Text("Back")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .background(Color(hex: 0x1E88E5))
-                    .cornerRadius(4)
-                    .shadow(radius: 3, y: 3)
-
-                Text("Log out")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(Color(hex: 0xE3F2FD))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .background(Color(hex: 0xF44336))
-                    .cornerRadius(4)
-                    .shadow(radius: 3, y: 3)
+                Button(action: { dismiss() }) {
+                    Text("Back")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 48)
+                        .background(Color(hex: 0x1E88E5))
+                        .cornerRadius(4)
+                        .shadow(radius: 3, y: 3)
+                }
+                
+                Button(action: {
+                    isLoggedIn = false
+                }) {
+                    Text("Log out")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(Color(hex: 0xE3F2FD))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 48)
+                        .background(Color(hex: 0xF44336))
+                        .cornerRadius(4)
+                        .shadow(radius: 3, y: 3)
+                }
             }
             .padding(.top, 10)
             .padding(.bottom, 8)
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 20)
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 struct ProfileMenuItem: View {
     var title: String
-
     var body: some View {
         HStack {
             Text(title)
@@ -95,5 +114,5 @@ struct ProfileMenuItem: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(isLoggedIn: .constant(true))
 }
