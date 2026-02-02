@@ -9,8 +9,6 @@ struct HomeView: View {
     var body: some View {
         if userRole.lowercased() == "senior" {
             SeniorDashboard(userName: userName, userRole: userRole, isLoggedIn: $isLoggedIn)
-        } else {
-            FamilyCaregiverDashboard()
         }
     }
 }
@@ -141,18 +139,6 @@ struct SeniorDashboard: View {
             .padding(.vertical, 20)
         }
         .navigationBarHidden(true)
-    }
-}
-
-struct FamilyCaregiverDashboard: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("My Seniors")
-                .font(.system(size: 24, weight: .bold))
-            Divider()
-            Spacer()
-        }
-        .padding(16)
     }
 }
 
