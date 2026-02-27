@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct LoginView: View {
     @Binding var isLoggedIn: Bool
@@ -7,6 +8,9 @@ struct LoginView: View {
     @State private var username = ""
     @State private var password = ""
     @State private var navigateToHome = false
+    @State private var errorMessage: String? = nil
+    
+    @Environment(\.modelContext) private var context
     
     var body: some View {
         VStack {
@@ -33,8 +37,26 @@ struct LoginView: View {
                 Spacer()
                     .frame(height: 28)
                 
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.bottom, 8)
+                }
+
                 Button(action: {
-                    isLoggedIn = true
+                    Task {
+                        do {
+                            let request = FetchDescriptor<User>(predicate: #Predicate { $0.username == username })
+                            if let user = try context.fetch(request).first, user.password == password {
+                                isLoggedIn = true
+                            } else {
+                                errorMessage = "Invalid username or password"
+                            }
+                        } catch {
+                            errorMessage = "An error occurred. Please try again."
+                        }
+                    }
                 }) {
                     Text("Log In")
                         .font(.system(size: 18, weight: .medium))

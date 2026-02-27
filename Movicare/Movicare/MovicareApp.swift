@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct MovicareApp: App {
@@ -14,5 +15,6 @@ struct MovicareApp: App {
                 WelcomeView(isLoggedIn: $isLoggedIn)
             }
         }
+        .modelContainer(for: User.self)
     }
 }
