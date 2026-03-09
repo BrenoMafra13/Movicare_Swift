@@ -3,6 +3,7 @@ import SwiftData
 
 struct LoginView: View {
     @Binding var isLoggedIn: Bool
+    @Binding var currentUsername: String
     @Environment(\.dismiss) var dismiss
     
     @State private var username = ""
@@ -25,14 +26,14 @@ struct LoginView: View {
                     .frame(height: 16)
                 
                 TextField("Username", text: $username)
-                    .textFieldStyle(.outlined)
+                    .textFieldStyle(.roundedBorder)
                     .autocapitalization(.none)
                 
                 Spacer()
                     .frame(height: 12)
                 
                 SecureField("Password", text: $password)
-                    .textFieldStyle(.outlined)
+                    .textFieldStyle(.roundedBorder)
                 
                 Spacer()
                     .frame(height: 28)
@@ -49,6 +50,8 @@ struct LoginView: View {
                         do {
                             let request = FetchDescriptor<User>(predicate: #Predicate { $0.username == username })
                             if let user = try context.fetch(request).first, user.password == password {
+                                errorMessage = nil
+                                currentUsername = user.username
                                 isLoggedIn = true
                             } else {
                                 errorMessage = "Invalid username or password"
@@ -91,5 +94,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(isLoggedIn: .constant(false))
+    LoginView(isLoggedIn: .constant(false), currentUsername: .constant(""))
 }

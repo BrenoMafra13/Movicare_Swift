@@ -1,154 +1,138 @@
 import SwiftUI
+import SwiftData
+import UIKit
 
 struct MyHealthView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var userName: String = "User Name"
-    @State private var userRole: String = "Patient"
-    @State private var conditions: String = "Asthma\nHypertension"
-    @State private var allergies: String = "Peanuts\nPenicillin"
-    @State private var height: String = "180"
-    @State private var weight: String = "75"
-    @State private var isEditing: Bool = false
-    
+    @Environment(\.modelContext) private var context
+
+    let user: User
+    @State private var isEditing = false
+    @State private var conditions = ""
+    @State private var allergies = ""
+    @State private var height = ""
+    @State private var weight = ""
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 HStack(spacing: 16) {
-                    Image("profile")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 80, height: 80)
-                        .clipShape(Circle())
-                    
+                    if let avatarData = user.avatarData, let uiImage = UIImage(data: avatarData) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
+                    } else {
+                        Image("profile")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
+                    }
+
                     VStack(alignment: .leading) {
-                        Text(userName)
+                        Text(user.fullName)
                             .font(.system(size: 24, weight: .bold))
-                        Text(userRole)
+                        Text("Senior")
                             .font(.system(size: 16))
                             .foregroundColor(.gray)
                     }
+
+                    Spacer()
+
+                    Button(isEditing ? "Save" : "Edit") {
+                        if isEditing {
+                            save()
+                        } else {
+                            isEditing = true
+                        }
+                    }
                 }
-                .padding(.bottom, 8)
-                
-                HealthSection(title: "Medical Conditions", content: $conditions, isEditing: isEditing)
-                
-                HealthSection(title: "Allergies", content: $allergies, isEditing: isEditing)
-                
+
+                HealthSection(title: "Medical Conditions", text: $conditions, isEditing: isEditing)
+                HealthSection(title: "Allergies", text: $allergies, isEditing: isEditing)
+
                 HStack(spacing: 16) {
                     HealthCard(title: "Height", value: $height, unit: "cm", isEditing: isEditing)
                     HealthCard(title: "Weight", value: $weight, unit: "kg", isEditing: isEditing)
                 }
             }
-            .padding(16)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 24)
         }
         .navigationTitle("My Health")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "arrow.left")
-                        .foregroundColor(.primary)
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { isEditing.toggle() }) {
-                    IconView(isEditing: isEditing)
-                }
-            }
+        .onAppear(perform: loadFromUser)
+    }
+
+    private func loadFromUser() {
+        conditions = user.conditions ?? ""
+        allergies = user.allergies ?? ""
+        height = user.height ?? ""
+        weight = user.weight ?? ""
+    }
+
+    private func save() {
+        user.conditions = conditions.trimmingCharacters(in: .whitespacesAndNewlines)
+        user.allergies = allergies.trimmingCharacters(in: .whitespacesAndNewlines)
+        user.height = height.trimmingCharacters(in: .whitespacesAndNewlines)
+        user.weight = weight.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        do {
+            try context.save()
+            isEditing = false
+        } catch {
+            isEditing = false
         }
     }
 }
 
-struct HealthSection: View {
+private struct HealthSection: View {
     let title: String
-    @Binding var content: String
-    var isEditing: Bool
-    
+    @Binding var text: String
+    let isEditing: Bool
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.system(size: 18, weight: .semibold))
-            
-            VStack(alignment: .leading) {
-                if isEditing {
-                    TextEditor(text: $content)
-                        .frame(minHeight: 100)
-                        .padding(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                        )
-                } else {
-                    VStack(alignment: .leading, spacing: 6) {
-                        if content.trimmed().isEmpty {
-                            Text("None listed").foregroundColor(.gray)
-                        } else {
-                            ForEach(content.components(separatedBy: "\n"), id: \.self) { item in
-                                if !item.isEmpty {
-                                    HStack(alignment: .top) {
-                                        Text("•").foregroundColor(Color(hex: 0x4CAF50))
-                                        Text(item)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .padding(16)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.white)
-                    .cornerRadius(12)
-                    .shadow(color: .black.opacity(0.05), radius: 2)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.2), lineWidth: 1))
-                }
+
+            if isEditing {
+                TextField(title, text: $text)
+                    .textFieldStyle(.roundedBorder)
+            } else {
+                Text(text.isEmpty ? "--" : text)
+                    .font(.system(size: 16))
             }
         }
     }
 }
 
-struct HealthCard: View {
+private struct HealthCard: View {
     let title: String
     @Binding var value: String
     let unit: String
-    var isEditing: Bool
-    
+    let isEditing: Bool
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.system(size: 18, weight: .semibold))
-            
-            VStack {
-                if isEditing {
-                    TextField(unit, text: $value)
-                        .keyboardType(.decimalPad)
-                        .padding(12)
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.3), lineWidth: 1))
-                } else {
-                    Text(value.isEmpty ? "-- \(unit)" : "\(value) \(unit)")
-                        .font(.system(size: 20, weight: .bold))
-                        .padding(16)
-                        .frame(maxWidth: .infinity)
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.05), radius: 2)
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.2), lineWidth: 1))
-                }
+                .font(.system(size: 16, weight: .semibold))
+
+            if isEditing {
+                TextField(title, text: $value)
+                    .keyboardType(.decimalPad)
+                    .textFieldStyle(.roundedBorder)
+            } else {
+                Text(value.isEmpty ? "--" : "\(value) \(unit)")
+                    .font(.system(size: 16))
             }
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(10)
     }
 }
 
-struct IconView: View {
-    var isEditing: Bool
-    var body: some View {
-        Image(systemName: isEditing ? "checkmark.circle.fill" : "pencil")
-            .font(.system(size: 18))
-    }
-}
-
-extension String {
-    func trimmed() -> String {
-        self.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-}

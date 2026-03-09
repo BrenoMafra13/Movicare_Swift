@@ -1,26 +1,33 @@
 import SwiftUI
+import SwiftData
+import UIKit
 
 struct ProfileView: View {
     @Environment(\.dismiss) var dismiss
+    let user: User
     @Binding var isLoggedIn: Bool
-    
-    @State private var userName: String = "Jhon Doe"
-    @State private var userRole: String = "SENIOR"
-    @State private var address: String = "123 Maple Avenue, Springfield, IL"
+    @Binding var currentUsername: String
     
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
                 HStack(alignment: .top, spacing: 16) {
-                    Image("profile")
-                        .resizable()
-                        .frame(width: 130, height: 130)
-                        .clipShape(Circle())
+                    if let avatarData = user.avatarData, let uiImage = UIImage(data: avatarData) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .frame(width: 130, height: 130)
+                            .clipShape(Circle())
+                    } else {
+                        Image("profile")
+                            .resizable()
+                            .frame(width: 130, height: 130)
+                            .clipShape(Circle())
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
-                        Text(userName)
+                        Text(user.fullName)
                             .font(.system(size: 30, weight: .bold))
-                        Text(userRole)
+                        Text("SENIOR")
                             .font(.system(size: 18))
                             .foregroundColor(.gray)
                         
@@ -29,7 +36,7 @@ struct ProfileView: View {
                             .font(.system(size: 20, weight: .bold))
                         
                         Spacer().frame(height: 4)
-                        Text(address)
+                        Text(user.address.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Not added yet" : user.address)
                             .font(.system(size: 16))
                             .foregroundColor(.black)
                             .lineLimit(nil)
@@ -41,7 +48,7 @@ struct ProfileView: View {
                 Spacer().frame(height: 28)
                 
                 VStack(spacing: 10) {
-                    NavigationLink(destination: MyHealthView()) {
+                    NavigationLink(destination: MyHealthView(user: user)) {
                         ProfileMenuItem(title: "My Health")
                     }
                     NavigationLink(destination: MedicationsView()) {
@@ -53,7 +60,7 @@ struct ProfileView: View {
                     NavigationLink(destination: AppointmentsView()) {
                         ProfileMenuItem(title: "Appointments")
                     }
-                    NavigationLink(destination: AccountView()) {
+                    NavigationLink(destination: AccountView(user: user)) {
                         ProfileMenuItem(title: "Account")
                     }
                 }
@@ -74,6 +81,7 @@ struct ProfileView: View {
                 }
                 
                 Button(action: {
+                    currentUsername = ""
                     isLoggedIn = false
                 }) {
                     Text("Log out")
@@ -114,5 +122,9 @@ struct ProfileMenuItem: View {
 }
 
 #Preview {
-    ProfileView(isLoggedIn: .constant(true))
+    ProfileView(
+        user: User(username: "preview", password: "123", fullName: "Preview User", email: "preview@email.com", phoneNumber: "0000000000"),
+        isLoggedIn: .constant(true),
+        currentUsername: .constant("preview")
+    )
 }

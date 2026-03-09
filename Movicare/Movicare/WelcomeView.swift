@@ -2,6 +2,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     @Binding var isLoggedIn: Bool
+    @Binding var currentUsername: String
     
     var body: some View {
         NavigationStack {
@@ -32,7 +33,7 @@ struct WelcomeView: View {
                     Spacer()
                         .frame(height: 40)
                     
-                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn)) {
+                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, currentUsername: $currentUsername)) {
                         Text("Log In")
                             .font(.system(size: 18, weight: .medium))
                             .frame(maxWidth: .infinity)
@@ -62,5 +63,5 @@ struct WelcomeView: View {
 }
 
 #Preview {
-    WelcomeView(isLoggedIn: .constant(false))
+    WelcomeView(isLoggedIn: .constant(false), currentUsername: .constant(""))
 }

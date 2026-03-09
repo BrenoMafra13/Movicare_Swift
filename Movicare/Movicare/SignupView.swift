@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import PhotosUI
+import UIKit
 
 struct SignupView: View {
     @Environment(\.dismiss) var dismiss
@@ -13,7 +14,6 @@ struct SignupView: View {
     @State private var confirm = ""
     @State private var phoneNumber = ""
 
-    @State private var avatarUri: String? = nil
     @State private var validationMessage: String? = nil
 
     @State private var selectedItem: PhotosPickerItem? = nil
@@ -53,7 +53,13 @@ struct SignupView: View {
 
                 Button(action: {
                     Task {
-                        guard !username.isEmpty, !password.isEmpty, !fullName.isEmpty, !email.isEmpty, !phoneNumber.isEmpty else {
+                        let normalizedFullName = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let normalizedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let normalizedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let normalizedPhone = phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let normalizedPassword = password
+
+                        guard !normalizedUsername.isEmpty, !normalizedPassword.isEmpty, !normalizedFullName.isEmpty, !normalizedEmail.isEmpty, !normalizedPhone.isEmpty else {
                             validationMessage = "All fields are required"
                             return
                         }
@@ -63,19 +69,36 @@ struct SignupView: View {
                             return
                         }
 
-                        guard email.contains("@") else {
+                        guard normalizedEmail.contains("@") else {
                             validationMessage = "Invalid email format"
                             return
                         }
 
-                        guard phoneNumber.allSatisfy({ $0.isNumber }) else {
+                        guard normalizedPhone.allSatisfy({ $0.isNumber }) else {
                             validationMessage = "Phone number must contain only digits"
+                            return
+                        }
+
+                        let existingUserDescriptor = FetchDescriptor<User>(
+                            predicate: #Predicate { $0.username == normalizedUsername }
+                        )
+
+                        if let _ = try? context.fetch(existingUserDescriptor).first {
+                            validationMessage = "Username already exists"
                             return
                         }
 
                         validationMessage = nil
 
-                        let newUser = User(username: username, password: password, fullName: fullName, email: email, phoneNumber: phoneNumber)
+                        let avatarData = selectedImage?.jpegData(compressionQuality: 0.8)
+                        let newUser = User(
+                            username: normalizedUsername,
+                            password: normalizedPassword,
+                            fullName: normalizedFullName,
+                            email: normalizedEmail,
+                            phoneNumber: normalizedPhone,
+                            avatarData: avatarData
+                        )
                         do {
                             context.insert(newUser)
                             try context.save()

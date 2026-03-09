@@ -17,18 +17,3 @@ extension View {
         self.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
     }
 }
-
-struct OutlinedTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .padding(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-            )
-    }
-}
-
-extension TextFieldStyle where Self == OutlinedTextFieldStyle {
-    static var outlined: OutlinedTextFieldStyle { OutlinedTextFieldStyle() }
-}

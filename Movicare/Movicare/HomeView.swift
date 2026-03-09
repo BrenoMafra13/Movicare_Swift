@@ -1,39 +1,67 @@
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     @Binding var isLoggedIn: Bool
-    
-    @State private var userRole: String = "senior"
-    @State private var userName: String = "Jhon Doe"
+    @Binding var currentUsername: String
+    @Environment(\.modelContext) private var modelContext
+    @State private var user: User?
     
     var body: some View {
-        if userRole.lowercased() == "senior" {
-            SeniorDashboard(userName: userName, userRole: userRole, isLoggedIn: $isLoggedIn)
+        Group {
+            if let user {
+                SeniorDashboard(user: user, isLoggedIn: $isLoggedIn, currentUsername: $currentUsername)
+            } else {
+                ContentUnavailableView("User not found", systemImage: "person.slash")
+            }
+        }
+        .onAppear(perform: loadCurrentUser)
+    }
+
+    private func loadCurrentUser() {
+        guard !currentUsername.isEmpty else {
+            isLoggedIn = false
+            return
+        }
+
+        let descriptor = FetchDescriptor<User>(predicate: #Predicate { $0.username == currentUsername })
+        user = try? modelContext.fetch(descriptor).first
+
+        if user == nil {
+            isLoggedIn = false
+            currentUsername = ""
         }
     }
 }
 
 struct SeniorDashboard: View {
-    let userName: String
-    let userRole: String
+    let user: User
     @Binding var isLoggedIn: Bool
+    @Binding var currentUsername: String
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack(spacing: 12) {
-                    NavigationLink(destination: ProfileView(isLoggedIn: $isLoggedIn)) {
-                        Image("profile")
-                            .resizable()
-                            .frame(width: 75, height: 75)
-                            .clipShape(Circle())
+                    NavigationLink(destination: ProfileView(user: user, isLoggedIn: $isLoggedIn, currentUsername: $currentUsername)) {
+                        if let avatarData = user.avatarData, let uiImage = UIImage(data: avatarData) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .frame(width: 75, height: 75)
+                                .clipShape(Circle())
+                        } else {
+                            Image("profile")
+                                .resizable()
+                                .frame(width: 75, height: 75)
+                                .clipShape(Circle())
+                        }
                     }
                     .buttonStyle(PlainButtonStyle())
                     
                     VStack(alignment: .leading) {
-                        Text(userName)
+                        Text(user.fullName)
                             .font(.system(size: 30, weight: .bold))
-                        Text(userRole.uppercased())
+                        Text("SENIOR")
                             .font(.system(size: 20))
                             .foregroundColor(.gray)
                     }
@@ -111,12 +139,12 @@ struct SeniorDashboard: View {
                     HStack(spacing: 16) {
                         VStack {
                             Image(systemName: "mappin.and.ellipse")
-                                .font(.system(size: 50))
+.font(.system(size: 50))
                             Text("Ride")
                                 .font(.system(size: 25, weight: .bold))
                         }
                         .frame(maxWidth: .infinity)
-                        .frame(height: 130)
+.frame(height: 130)
                         .background(Color.black)
                         .foregroundColor(.white)
                         .cornerRadius(18)
@@ -143,5 +171,6 @@ struct SeniorDashboard: View {
 }
 
 #Preview {
-    HomeView(isLoggedIn: .constant(true))
+    HomeView(isLoggedIn: .constant(true), currentUsername: .constant(""))
+        .modelContainer(for: User.self, inMemory: true)
 }
