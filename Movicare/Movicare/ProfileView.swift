@@ -51,13 +51,13 @@ struct ProfileView: View {
                     NavigationLink(destination: MyHealthView(user: user)) {
                         ProfileMenuItem(title: "My Health")
                     }
-                    NavigationLink(destination: MedicationsView()) {
+                    NavigationLink(destination: MedicationsView(user: user)) {
                         ProfileMenuItem(title: "Medications")
                     }
                     NavigationLink(destination: FamilyMembersView()) {
                         ProfileMenuItem(title: "Family Members")
                     }
-                    NavigationLink(destination: AppointmentsView()) {
+                    NavigationLink(destination: AppointmentsView(user: user)) {
                         ProfileMenuItem(title: "Appointments")
                     }
                     NavigationLink(destination: AccountView(user: user)) {

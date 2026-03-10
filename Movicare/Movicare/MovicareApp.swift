@@ -16,7 +16,7 @@ struct MovicareApp: App {
                 WelcomeView(isLoggedIn: $isLoggedIn, currentUsername: $currentUsername)
             }
         }
-        .modelContainer(for: User.self)
+        .modelContainer(for: [User.self, Medication.self, Appointment.self])
     }
 }
 
