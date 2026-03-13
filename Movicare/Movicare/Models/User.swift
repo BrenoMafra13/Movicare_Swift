@@ -52,4 +52,4 @@ class User {
         self.appointments = appointments
         self.familyMembers = familyMembers
     }
-}
+} 

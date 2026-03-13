@@ -128,3 +128,4 @@ struct ProfileMenuItem: View {
         currentUsername: .constant("preview")
     )
 }
+
