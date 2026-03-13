@@ -54,7 +54,7 @@ struct ProfileView: View {
                     NavigationLink(destination: MedicationsView(user: user)) {
                         ProfileMenuItem(title: "Medications")
                     }
-                    NavigationLink(destination: FamilyMembersView()) {
+                    NavigationLink(destination: FamilyMembersView(user: user)) {
                         ProfileMenuItem(title: "Family Members")
                     }
                     NavigationLink(destination: AppointmentsView(user: user)) {

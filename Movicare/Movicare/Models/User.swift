@@ -17,6 +17,7 @@ class User {
     var weight: String?
     @Relationship(deleteRule: .cascade) var medications: [Medication]
     @Relationship(deleteRule: .cascade) var appointments: [Appointment]
+    @Relationship(deleteRule: .cascade) var familyMembers: [FamilyMember]
 
     init(
         username: String,
@@ -32,7 +33,8 @@ class User {
         height: String? = nil,
         weight: String? = nil,
         medications: [Medication] = [],
-        appointments: [Appointment] = []
+        appointments: [Appointment] = [],
+        familyMembers: [FamilyMember] = []
     ) {
         self.username = username
         self.password = password
@@ -48,5 +50,6 @@ class User {
         self.weight = weight
         self.medications = medications
         self.appointments = appointments
+        self.familyMembers = familyMembers
     }
 }

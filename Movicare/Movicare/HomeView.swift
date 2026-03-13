@@ -39,8 +39,13 @@ struct SeniorDashboard: View {
     @Binding var isLoggedIn: Bool
     @Binding var currentUsername: String
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.openURL) private var openURL
     @State private var pendingTakenDose: DueMedication?
     @State private var refreshCounter = 0
+    @State private var showMessagesUnavailableAlert = false
+    @State private var isEmergencyHoldActive = false
+    @State private var emergencyCountdown = 3
+    @State private var emergencyCountdownTask: Task<Void, Never>?
 
     private static let dueDayFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -56,16 +61,18 @@ struct SeniorDashboard: View {
 
     private var nearestUpcomingAppointment: Appointment? {
         let now = Date()
+        let threshold = now.addingTimeInterval(-60)
         return user.appointments
-            .filter { $0.scheduledAt >= now }
+            .filter { $0.scheduledAt >= threshold }
             .sorted { $0.scheduledAt < $1.scheduledAt }
             .first
     }
 
     private var nextMedicationDue: DueMedication? {
         _ = refreshCounter
-        let calendar = Calendar.current
         let now = Date()
+        let threshold = now.addingTimeInterval(-60)
+        let calendar = Calendar.current
         guard let limitDate = calendar.date(byAdding: .day, value: 14, to: now) else {
             return nil
         }
@@ -73,25 +80,9 @@ struct SeniorDashboard: View {
         var nearest: DueMedication?
 
         for medication in user.medications {
-            guard let scheduled = scheduledDueForNextUntakenDose(medication) else {
+            guard let candidate = nextUpcomingDose(for: medication, threshold: threshold, limitDate: limitDate) else {
                 continue
             }
-
-            let adjustedDueAt = adjustedDueDate(
-                for: medication,
-                scheduledDueAt: scheduled.dueAt,
-                day: scheduled.dueDay
-            )
-
-            if adjustedDueAt < now || adjustedDueAt > limitDate {
-                continue
-            }
-
-            let candidate = DueMedication(
-                medication: medication,
-                dueAt: adjustedDueAt,
-                dueDay: scheduled.dueDay
-            )
 
             if nearest == nil || candidate.dueAt < nearest!.dueAt {
                 nearest = candidate
@@ -139,12 +130,12 @@ struct SeniorDashboard: View {
                 
                 VStack {
                     VStack {
-                        Text("I'm OK")
+                        Text(isEmergencyHoldActive ? "Emergency" : "I'm OK")
                             .font(.system(size: 40, weight: .bold))
                             .foregroundColor(.white)
-                        
+
                         Spacer().frame(height: 8)
-                        
+
                         HStack {
                             Image(systemName: "bell.fill")
                             Text("Panic button\nhold 3 sec")
@@ -152,11 +143,37 @@ struct SeniorDashboard: View {
                                 .lineLimit(2)
                         }
                         .foregroundColor(.white)
+
+                        if isEmergencyHoldActive {
+                            Spacer().frame(height: 8)
+                            Text("\(emergencyCountdown)")
+                                .font(.system(size: 34, weight: .bold))
+                                .foregroundColor(.white)
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 180)
-                    .background(Color(hex: 0x4CAF50))
+                    .background(isEmergencyHoldActive ? Color(hex: 0xD32F2F) : Color(hex: 0x4CAF50))
                     .cornerRadius(20)
+                    .onTapGesture {
+                        if !isEmergencyHoldActive {
+                            openMessagesWithText("I am okay, check-in completed")
+                        }
+                    }
+                    .onLongPressGesture(
+                        minimumDuration: 3,
+                        maximumDistance: 60,
+                        pressing: { pressing in
+                            if pressing {
+                                startEmergencyHold()
+                            } else {
+                                cancelEmergencyHold()
+                            }
+                        },
+                        perform: {
+                            triggerEmergencyMessage()
+                        }
+                    )
                 }
                 
                 VStack(alignment: .leading, spacing: 12) {
@@ -249,29 +266,35 @@ struct SeniorDashboard: View {
                         .font(.system(size: 20, weight: .bold))
                     
                     HStack(spacing: 16) {
-                        VStack {
-                            Image(systemName: "mappin.and.ellipse")
-.font(.system(size: 50))
-                            Text("Ride")
-                                .font(.system(size: 25, weight: .bold))
+                        Button(action: openAppleMaps) {
+                            VStack {
+                                Image(systemName: "mappin.and.ellipse")
+                                    .font(.system(size: 50))
+                                Text("Ride")
+                                    .font(.system(size: 25, weight: .bold))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 130)
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .cornerRadius(18)
                         }
-                        .frame(maxWidth: .infinity)
-.frame(height: 130)
-                        .background(Color.black)
-                        .foregroundColor(.white)
-                        .cornerRadius(18)
+                        .buttonStyle(.plain)
                         
-                        VStack {
-                            Image(systemName: "phone.fill")
-                                .font(.system(size: 50))
-                            Text("Assistance")
-                                .font(.system(size: 25, weight: .bold))
+                        Button(action: openMessagesApp) {
+                            VStack {
+                                Image(systemName: "message.fill")
+                                    .font(.system(size: 50))
+                                Text("Assistance")
+                                    .font(.system(size: 25, weight: .bold))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 130)
+                            .background(Color(hex: 0xE0E0E0))
+                            .foregroundColor(.black)
+                            .cornerRadius(18)
                         }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 130)
-                        .background(Color(hex: 0xE0E0E0))
-                        .foregroundColor(.black)
-                        .cornerRadius(18)
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -279,9 +302,14 @@ struct SeniorDashboard: View {
             .padding(.vertical, 20)
         }
         .navigationBarHidden(true)
+        .alert("Unable to open Messages", isPresented: $showMessagesUnavailableAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("This device cannot open the Messages app.")
+        }
     }
 
-    private func scheduledDueForNextUntakenDose(_ medication: Medication) -> (dueDay: Date, dueAt: Date)? {
+    private func nextUpcomingDose(for medication: Medication, threshold: Date, limitDate: Date) -> DueMedication? {
         let calendar = Calendar.current
         let startDay = calendar.startOfDay(for: medication.startDate)
         let endDay = calendar.startOfDay(for: medication.endDate)
@@ -291,25 +319,41 @@ struct SeniorDashboard: View {
         }
 
         let totalDoses = calendar.dateComponents([.day], from: startDay, to: endDay).day! + 1
-        guard medication.takenDosesCount < totalDoses else {
-            return nil
-        }
-
-        guard let dueDay = calendar.date(byAdding: .day, value: medication.takenDosesCount, to: startDay) else {
+        let startIndex = max(0, medication.takenDosesCount)
+        guard startIndex < totalDoses else {
             return nil
         }
 
         let timeComponents = calendar.dateComponents([.hour, .minute], from: medication.time)
-        guard let dueAt = calendar.date(
-            bySettingHour: timeComponents.hour ?? 0,
-            minute: timeComponents.minute ?? 0,
-            second: 0,
-            of: dueDay
-        ) else {
-            return nil
+        for doseIndex in startIndex..<totalDoses {
+            guard let dueDay = calendar.date(byAdding: .day, value: doseIndex, to: startDay) else {
+                continue
+            }
+
+            guard let dueAt = calendar.date(
+                bySettingHour: timeComponents.hour ?? 0,
+                minute: timeComponents.minute ?? 0,
+                second: 0,
+                of: dueDay
+            ) else {
+                continue
+            }
+
+            let adjustedDueAt = adjustedDueDate(for: medication, scheduledDueAt: dueAt, day: dueDay)
+
+            if adjustedDueAt < threshold || adjustedDueAt > limitDate {
+                continue
+            }
+
+            return DueMedication(
+                medication: medication,
+                dueAt: adjustedDueAt,
+                dueDay: dueDay,
+                doseIndex: doseIndex
+            )
         }
 
-        return (dueDay, dueAt)
+        return nil
     }
 
     private func adjustedDueDate(for medication: Medication, scheduledDueAt: Date, day: Date) -> Date {
@@ -333,7 +377,7 @@ struct SeniorDashboard: View {
         let endDay = calendar.startOfDay(for: due.medication.endDate)
         let totalDoses = calendar.dateComponents([.day], from: startDay, to: endDay).day! + 1
 
-        due.medication.takenDosesCount += 1
+        due.medication.takenDosesCount = max(due.medication.takenDosesCount, due.doseIndex + 1)
         due.medication.snoozedUntil = nil
         due.medication.snoozedForDay = nil
 
@@ -373,10 +417,113 @@ struct SeniorDashboard: View {
         refreshCounter += 1
     }
 
+    private func openAppleMaps() {
+        guard let mapsURL = URL(string: "maps://") else {
+            return
+        }
+        openURL(mapsURL)
+    }
+
+    private func openMessagesApp() {
+        openMessagesWithoutRecipient()
+    }
+
+    private func openMessagesWithText(_ text: String) {
+        openMessagesWithTextWithoutRecipient(text)
+    }
+
+    private func openMessagesWithTextWithoutRecipient(_ text: String) {
+        guard let encodedText = text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let smsWithBodyURL = URL(string: "sms:&body=\(encodedText)") else {
+            openMessagesWithoutRecipient()
+            return
+        }
+
+        openURL(smsWithBodyURL) { accepted in
+            if accepted {
+                return
+            }
+
+            guard let smsAlternateURL = URL(string: "sms:?body=\(encodedText)") else {
+                openMessagesWithoutRecipient()
+                return
+            }
+
+            openURL(smsAlternateURL) { alternateAccepted in
+                if !alternateAccepted {
+                    openMessagesWithoutRecipient()
+                }
+            }
+        }
+    }
+
+    private func openMessagesWithoutRecipient() {
+        guard let messagesURL = URL(string: "messages://") else {
+            showMessagesUnavailableAlert = true
+            return
+        }
+
+        openURL(messagesURL) { accepted in
+            if accepted {
+                return
+            }
+
+            guard let smsURL = URL(string: "sms://") else {
+                showMessagesUnavailableAlert = true
+                return
+            }
+
+            openURL(smsURL) { acceptedFallback in
+                if !acceptedFallback {
+                    showMessagesUnavailableAlert = true
+                }
+            }
+        }
+    }
+
+    private func startEmergencyHold() {
+        guard !isEmergencyHoldActive else {
+            return
+        }
+
+        isEmergencyHoldActive = true
+        emergencyCountdown = 3
+        emergencyCountdownTask?.cancel()
+        emergencyCountdownTask = Task {
+            for value in stride(from: 3, through: 1, by: -1) {
+                if Task.isCancelled {
+                    return
+                }
+
+                await MainActor.run {
+                    emergencyCountdown = value
+                }
+
+                if value > 1 {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                }
+            }
+        }
+    }
+
+    private func triggerEmergencyMessage() {
+        cancelEmergencyHold()
+        openMessagesWithText("I need help, emergency button activated")
+    }
+
+    private func cancelEmergencyHold() {
+        emergencyCountdownTask?.cancel()
+        emergencyCountdownTask = nil
+
+        isEmergencyHoldActive = false
+        emergencyCountdown = 3
+    }
+
     private struct DueMedication {
         let medication: Medication
         let dueAt: Date
         let dueDay: Date
+        let doseIndex: Int
     }
 }
 
