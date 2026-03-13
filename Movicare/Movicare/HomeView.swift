@@ -531,4 +531,3 @@ struct SeniorDashboard: View {
     HomeView(isLoggedIn: .constant(true), currentUsername: .constant(""))
     .modelContainer(for: [User.self, Medication.self, Appointment.self], inMemory: true)
 }
-
